@@ -2,7 +2,7 @@
 
 $servidor = "127.0.0.1";
 $usuario = "root";
-$password = "Nemrac1985";
+$password = getenv('PASSWORD_DB');
 $baseDatos = "sonido_interior";
 
 $conexion = mysqli_connect($servidor, $usuario, $password, $baseDatos);
@@ -12,5 +12,4 @@ if (!$conexion) {
 }
 
 mysqli_set_charset($conexion, "utf8");
-
 ?>
