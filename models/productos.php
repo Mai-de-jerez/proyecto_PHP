@@ -27,8 +27,8 @@ function obtenerProductosAdmin(mysqli $conexion) {
 
 // Función para obtener solo los 4 últimos productos ACTIVOS con imagen, nombre y precio para el inicio
 function obtenerUltimosProductosInicio(mysqli $conexion) {
-
-    $sql = "SELECT imagen, nombre, precio 
+ 
+    $sql = "SELECT id_producto, imagen, nombre, precio 
             FROM productos 
             WHERE activo = 1 
             ORDER BY id_producto DESC 
@@ -118,5 +118,26 @@ function contarProductosCatalogo(mysqli $conexion, ?int $idCategoria = null): in
     $stmt->close();
 
     return (int) $fila['total'];
+}
+
+function obtenerProductoPorId(mysqli $conexion, int $idProducto): ?array {
+
+    $sql = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio, p.stock, p.imagen,
+                   p.diametro, p.peso, p.material, p.nota_musical, p.procedencia,
+                   c.nombre AS nombre_categoria
+            FROM productos p
+            INNER JOIN categorias c ON p.id_categoria = c.id_categoria
+            WHERE p.id_producto = ? AND p.activo = 1";
+
+    $stmt = mysqli_prepare($conexion, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $idProducto);
+    mysqli_stmt_execute($stmt);
+
+    $resultado = mysqli_stmt_get_result($stmt);
+    $producto = mysqli_fetch_assoc($resultado);
+
+    mysqli_stmt_close($stmt);
+
+    return $producto ?: null;
 }
 ?>

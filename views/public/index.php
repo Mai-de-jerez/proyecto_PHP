@@ -38,6 +38,8 @@ include __DIR__ . '/../../includes/menu.php';
         </article>
     </section>
 
+   
+
     <section class="seccion">
         <h2 class="titulo-seccion">Productos destacados</h2>
         <div class="grid-productos destacados">
@@ -46,7 +48,7 @@ include __DIR__ . '/../../includes/menu.php';
                 <p style="text-align: center; grid-column: 1 / -1; color: #8a735f; padding: 20px;">Próximamente nuevos cuencos disponibles.</p>
             <?php else: ?>
                 <?php foreach ($listado_inicio as $prod): ?>
-                    <article class="tarjeta-producto">
+                    <a href="views/public/productos/detalle-producto.php?id=<?php echo $prod['id_producto']; ?>" class="tarjeta-producto">
                         <?php if (!empty($prod['imagen'])): ?>
                             <img src="img/productos/<?php echo htmlspecialchars($prod['imagen']); ?>" alt="<?php echo htmlspecialchars($prod['nombre']); ?>">
                         <?php else: ?>
@@ -55,7 +57,7 @@ include __DIR__ . '/../../includes/menu.php';
                         
                         <h3><?php echo htmlspecialchars($prod['nombre']); ?></h3>
                         <p class="precio"><?php echo number_format($prod['precio'], 2, ',', '.'); ?> €</p>
-                    </article>
+                    </a>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>

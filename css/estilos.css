@@ -216,6 +216,16 @@ a {
     grid-template-columns: repeat(4, 1fr);
 }
 
+/* .tarjeta-producto {
+    background: #fffdf9;
+    border: 1px solid #eadfce;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(83, 55, 30, 0.08);
+} */
+
 .tarjeta-producto {
     background: #fffdf9;
     border: 1px solid #eadfce;
@@ -224,6 +234,13 @@ a {
     text-align: center;
     position: relative;
     box-shadow: 0 8px 20px rgba(83, 55, 30, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.tarjeta-producto:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 30px rgba(83, 55, 30, 0.15);
 }
 
 .tarjeta-producto img {
@@ -288,6 +305,81 @@ a {
     border-top: 1px solid #eadfce;
     color: #7d6b5d;
     font-size: 14px;
+}
+
+/* FICHA DE PRODUCTO */
+.detalle-producto {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: start;
+}
+ 
+.detalle-producto-imagen img {
+    width: 100%;
+    border-radius: 14px;
+    box-shadow: 0 10px 32px rgba(69, 45, 25, 0.12);
+}
+ 
+.detalle-producto-info h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+ 
+.detalle-producto-info .precio {
+    font-size: 26px !important;
+    margin-bottom: 20px;
+    display: block;
+}
+ 
+.detalle-producto-info .descripcion {
+    color: #6d5b4e;
+    margin-bottom: 26px;
+}
+ 
+.detalle-producto-caracteristicas {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 24px;
+}
+ 
+.detalle-producto-caracteristicas li {
+    font-size: 14px;
+    color: #59463a;
+    border-bottom: 1px solid #eadfce;
+    padding-bottom: 10px;
+}
+ 
+.detalle-producto-caracteristicas strong {
+    display: block;
+    color: #8a735f;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+ 
+.detalle-producto-stock {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 22px;
+}
+ 
+.detalle-producto-stock.disponible {
+    color: #356b2f;
+}
+ 
+.detalle-producto-stock.agotado {
+    color: #b03030;
+}
+ 
+@media (max-width: 900px) {
+    .detalle-producto {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* LOGIN */

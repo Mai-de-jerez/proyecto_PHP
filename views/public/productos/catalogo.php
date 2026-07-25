@@ -82,8 +82,9 @@ include __DIR__ . "/../../../includes/menu.php";
                     
                     <p class="precio"><?php echo number_format($producto['precio'], 2, ',', '.'); ?> €</p>
                     
+                    <?php $queryActual = http_build_query(['categoria' => $categoriaSeleccionada, 'orden' => $ordenSeleccionado, 'pag' => $paginaActual]); ?>
                     <!-- Enlazamos dinámicamente pasándole el id por la URL -->
-                    <a href="views/public/productos/producto.php?id=<?php echo $producto['id_producto']; ?>" class="boton secundario">Ver producto</a>
+                    <a href="views/public/productos/detalle-producto.php?id=<?php echo $producto['id_producto']; ?>&volver=<?php echo urlencode($queryActual); ?>" class="boton secundario">Ver producto</a>
                 </article>
             <?php endforeach; ?>
         <?php endif; ?>
