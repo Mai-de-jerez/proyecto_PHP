@@ -1,6 +1,6 @@
 <?php
 
-function ver($dato){
+function ver(mixed $dato){
 
     echo "<pre>";
     print_r($dato);
@@ -8,53 +8,48 @@ function ver($dato){
 
 }
 
-
-function subirFoto($foto, $nombreProducto = "", $pesoMaximo = 5000000 ){
+function subirFoto(array $foto, $nombreProducto = "", $pesoMaximo = 5000000 ){
  
-    if($nombreProducto != ""){
-            $nombreArchivo = limpiar_caracteres_especiales($nombreProducto);
-    }else{
-           $nombreArchivo = limpiar_caracteres_especiales($foto["name"]);
-           $nombreArchivo = cortarCadenaFinal($nombreArchivo, "."); 
-    }
-   //    
-
-
-    // nombrearchivo.png
-    // nombrearchivo_3443434.png
-    //nombrearchivo_3443434_34343.png
-    if(strpos($foto["type"],"png") || strpos($foto["type"],"jpeg") || strpos($foto["type"],"webp") && $foto["size"] <= $pesoMaximo ){
-
-        if(strpos($foto["type"],"png")){
-             $extension = ".png";
-        }else if(strpos($foto["type"],"jpeg")){
-              $extension = ".jpg";
+        if($nombreProducto != ""){
+                $nombreArchivo = limpiar_caracteres_especiales($nombreProducto);
         }else{
-            $extension = ".webp";
-        }
+            $nombreArchivo = limpiar_caracteres_especiales($foto["name"]);
+            $nombreArchivo = cortarCadenaFinal($nombreArchivo, "."); 
+        }  
 
-        $nombreFinal = $nombreArchivo.$extension;
-        if(file_exists("./cuencos/".$nombreFinal)){
-            //esto es si existe
-            $ramdom = time();
-            $nombreFinal = $nombreArchivo.$ramdom.$extension;
-        }
+        // nombrearchivo.png
+        // nombrearchivo_3443434.png
+        //nombrearchivo_3443434_34343.png
+        if((strpos($foto["type"],"png") || strpos($foto["type"],"jpeg") || strpos($foto["type"],"webp")) && $foto["size"] <= $pesoMaximo){
+            if(strpos($foto["type"],"png")){
+                $extension = ".png";
+            }else if(strpos($foto["type"],"jpeg")){
+                $extension = ".jpg";
+            }else{
+                $extension = ".webp";
+            }
 
-        if(!move_uploaded_file($foto["tmp_name"], "./cuencos/".$nombreFinal)){
-            echo "Error del servidor";
+            $nombreFinal = $nombreArchivo.$extension;
+            if (file_exists(__DIR__ . "/../img/productos/" . $nombreFinal)) {
+                //esto es si existe
+                $ramdom = time();
+                $nombreFinal = $nombreArchivo.$ramdom.$extension; 
+            }
+
+            if(!move_uploaded_file($foto["tmp_name"], __DIR__ . "/../img/productos/" . $nombreFinal)){
+                echo "Error del servidor";
+            }else{
+                // esto es la victoria
+                return $nombreFinal;
+            }
+
         }else{
-            // esto es la victoria
-            return $nombreFinal;
+
+            echo "La foto debe ser jpg, png o webp";
         }
-
-    }else{
-
-        echo "La foto debe ser jpg, png o webp";
     }
 
-}
-
-function subirMP3($nota, $nombreProducto = "", $pesoMaximo = 5000000 ){
+function subirMP3(array $nota, $nombreProducto = "", $pesoMaximo = 5000000 ){
  
     if($nombreProducto != ""){
             $nombreArchivo = limpiar_caracteres_especiales($nombreProducto);
@@ -67,13 +62,14 @@ function subirMP3($nota, $nombreProducto = "", $pesoMaximo = 5000000 ){
 
         $extension =  ".mp3";
         $nombreFinal = $nombreArchivo.$extension;
-        if(file_exists("./sonidos/".$nombreFinal)){
+        if(file_exists(__DIR__ . "/../sonidos/" . $nombreFinal)){
             //esto es si existe
             $ramdom = time();
             $nombreFinal = $nombreArchivo.$ramdom.$extension;
         }
 
-        if(!move_uploaded_file($nota["tmp_name"], "./sonidos/".$nombreFinal)){
+        
+        if(!move_uploaded_file($nota["tmp_name"], __DIR__ . "/../sonidos/" . $nombreFinal)){
             echo "Error del servidor";
         }else{
             // esto es la victoria
@@ -86,7 +82,7 @@ function subirMP3($nota, $nombreProducto = "", $pesoMaximo = 5000000 ){
 
 }
 
-function limpiar_caracteres_especiales($cadena) {
+function limpiar_caracteres_especiales(string $cadena) {
 
     //preg_replace($patrones, $sustituciones, $cadena);
     //$cadena =  preg_replace("/[^a-zA-Z0-9\_\-]+/", "",$cadena);
@@ -141,15 +137,11 @@ function limpiar_caracteres_especiales($cadena) {
     return $cadena;
 }
 
-
-function cortarCadenaFinal($cadena, $caracter = "."){
-
-// localicamos en que posición se haya la $subcadena, en nuestro caso la posicion es "7"
-    $posicionsubcadena = strrpos ($cadena, $caracter);
-// eliminamos los caracteres desde $subcadena hacia la izq, y le sumamos 1 para borrar tambien el @ en este caso
-    $nombre = substr ($cadena, 0, ($posicionsubcadena));
-    return $nombre;
-
-}
-
+function cortarCadenaFinal(string $cadena, $caracter = "."){
+        // localicamos en que posición se haya la $subcadena, en nuestro caso la posicion es "7"
+        $posicionsubcadena = strrpos ($cadena, $caracter);
+        // eliminamos los caracteres desde $subcadena hacia la izq, y le sumamos 1 para borrar tambien el @ en este caso
+        $nombre = substr ($cadena, 0, ($posicionsubcadena));
+        return $nombre;
+    }
 ?>

@@ -1,14 +1,14 @@
 <?php
-require "./funciones/consultas_db.php";
-require "includes/conexion.php"; 
+require_once __DIR__ . '/../../models/productos.php';
+require_once __DIR__ . '/../../includes/conexion.php';
 
 $listado_inicio = obtenerUltimosProductosInicio($conexion); 
 mysqli_close($conexion); 
 
 $titulo = "Sonido Interior | Cuencos Tibetanos";
 $pagina = "inicio";
-include("includes/header.php");
-include("includes/menu.php");
+include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../../includes/menu.php';
 ?>
 
 <main>
@@ -16,7 +16,7 @@ include("includes/menu.php");
         <div class="hero-texto">
             <h2>Armonía que<br>se siente</h2>
             <p>Cuencos tibetanos artesanales para meditación, relajación y bienestar interior.</p>
-            <a href="catalogo.php" class="boton principal">Ver catálogo</a>
+            <a href="views/public/productos/catalogo.php" class="boton principal">Ver catálogo</a>
         </div>
     </section>
 
@@ -48,7 +48,7 @@ include("includes/menu.php");
                 <?php foreach ($listado_inicio as $prod): ?>
                     <article class="tarjeta-producto">
                         <?php if (!empty($prod['imagen'])): ?>
-                            <img src="cuencos/<?php echo htmlspecialchars($prod['imagen']); ?>" alt="<?php echo htmlspecialchars($prod['nombre']); ?>">
+                            <img src="img/productos/<?php echo htmlspecialchars($prod['imagen']); ?>" alt="<?php echo htmlspecialchars($prod['nombre']); ?>">
                         <?php else: ?>
                             <img src="img/cuenco-12.svg" alt="Por defecto">
                         <?php endif; ?>
@@ -77,4 +77,4 @@ include("includes/menu.php");
     </section>
 </main>
 
-<?php include("includes/footer.php"); ?>
+<?php include __DIR__ . '/../../includes/footer.php'; ?>

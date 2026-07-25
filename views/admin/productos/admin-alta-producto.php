@@ -1,15 +1,19 @@
-<?php
-require "./funciones/consultas_db.php";
-require "includes/conexion.php"; 
-
+<?php 
+// comprobamos el rol del usuario logueado antes de mostrar la página
+$rolNecesario = 'ADMIN';
+require_once __DIR__ . '/../../../includes/seguridad.php';
+// llamamos a la conexion y al modelo de categorías para obtener el listado de categorías activas
+require_once __DIR__ . '/../../../models/categorias.php';
+require_once __DIR__ . '/../../../includes/conexion.php';
+// obtenemos el listado de categorías activas para el select del formulario
 $listado_categorias = obtenerCategoriasActivas($conexion);
 mysqli_close($conexion); 
 
 $titulo = "Añadir producto | Administración";
-$bodyClass = "admin-body";
+$bodyClass = "admin-body"; 
 $paginaAdmin = "alta-producto";
-include("includes/header.php");
-include("includes/menu-admin.php");
+include __DIR__ . '/../../../includes/header.php';
+include __DIR__ . '/../../../includes/menu-admin.php';
 ?>
 
 <main class="admin-main">
@@ -22,7 +26,7 @@ include("includes/menu-admin.php");
     </header>
 
     <section class="admin-contenido dos-columnas-admin">
-        <form class="formulario-admin" action="guardar-producto.php" method="post" enctype="multipart/form-data">
+        <form class="formulario-admin" action="controllers/productos/guardar-producto.php" method="post" enctype="multipart/form-data">
             <div class="form-grid">
                 <div class="campo ancho-completo">
                     <label for="nombre">Nombre del producto *</label>
@@ -95,7 +99,7 @@ include("includes/menu-admin.php");
             </div>
 
             <div class="acciones-formulario">
-                <a href="admin-listado-productos.php" class="boton cancelar">Cancelar</a>
+                <a href="views/admin/productos/admin-listado-productos.php" class="boton cancelar">Cancelar</a>
                 <button type="submit" class="boton principal">Guardar producto</button>
             </div>
         </form>
@@ -113,5 +117,4 @@ include("includes/menu-admin.php");
         </aside>
     </section>
 </main>
-
-<?php include("includes/footer-simple.php"); ?>
+<?php include __DIR__ . "/../../../includes/footer-simple.php";?>

@@ -1,6 +1,10 @@
 <?php
-require "./funciones/consultas_db.php";
-require "includes/conexion.php"; 
+// comprobamos el rol del usuario logueado antes de mostrar la página
+$rolNecesario = 'ADMIN';
+require_once __DIR__ . '/../../../includes/seguridad.php';
+// llamamos a la conexion y al modelo de productos para obtener el listado de productos
+require_once __DIR__ . '/../../../models/productos.php';
+require_once __DIR__ . '/../../../includes/conexion.php'; 
 
 $listado_productos = obtenerProductosAdmin($conexion); 
 mysqli_close($conexion); 
@@ -8,8 +12,8 @@ mysqli_close($conexion);
 $titulo = "Listado de productos | Administración";
 $bodyClass = "admin-body";
 $paginaAdmin = "productos";
-include("includes/header.php");
-include("includes/menu-admin.php");
+include __DIR__ . '/../../../includes/header.php';
+include __DIR__ . '/../../../includes/menu-admin.php';
 ?>
 
 <main class="admin-main">
@@ -18,7 +22,7 @@ include("includes/menu-admin.php");
             <h2>Listado de productos</h2>
             <p>Inicio › Productos › Listado</p>
         </div>
-        <a href="admin-alta-producto.php" class="boton principal">+ Añadir producto</a>
+        <a href="views/admin/productos/admin-alta-producto.php" class="boton principal">+ Añadir producto</a>
     </header>
 
     <section class="admin-contenido">
@@ -49,11 +53,12 @@ include("includes/menu-admin.php");
                                 <td>
                                     <!-- Si el producto tiene imagen subida la muestra de la carpeta cuencos, si no, una por defecto -->
                                     <?php if (!empty($prod['imagen'])): ?>
-                                        <img src="cuencos/<?php echo htmlspecialchars($prod['imagen']); ?>" alt="<?php echo htmlspecialchars($prod['nombre']); ?>">
+                                        <img src="img/productos/<?php echo htmlspecialchars($prod['imagen']); ?>" alt="<?php echo htmlspecialchars($prod['nombre']); ?>">
                                     <?php else: ?>
                                         <img src="img/cuenco-12.svg" alt="Por defecto">
                                     <?php endif; ?>
                                 </td>
+
                                 <td><?php echo htmlspecialchars($prod['nombre']); ?></td>
                                 <td><?php echo htmlspecialchars($prod['nombre_categoria']); ?></td>
                                 <!-- Formateamos el precio para que luzca con su coma y símbolo de euro -->
@@ -90,4 +95,4 @@ include("includes/menu-admin.php");
     </section>
 </main>
 
-<?php include("includes/footer-simple.php"); ?>
+<?php include __DIR__ . '/../../../includes/footer-simple.php'; ?>

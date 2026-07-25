@@ -1,0 +1,122 @@
+<?php
+//==============================================
+// ----------CONSULTAS A PRODUCTOS-------------
+//==============================================
+
+// Función para obtener todos los productos activos con sus categorías en el admin
+function obtenerProductosAdmin(mysqli $conexion) {
+
+    $sql = "SELECT p.id_producto, p.nombre, p.precio, p.stock, p.imagen, p.nota_musical, p.activo, c.nombre AS nombre_categoria 
+            FROM productos p 
+            INNER JOIN categorias c ON p.id_categoria = c.id_categoria 
+            ORDER BY p.id_producto DESC";
+            
+    $resultado = mysqli_query($conexion, $sql);
+    
+    $productos = [];
+    if ($resultado) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
+            $productos[] = $fila;
+        }
+        mysqli_free_result($resultado);
+    }
+    
+    return $productos;
+}
+
+
+// Función para obtener solo los 4 últimos productos ACTIVOS con imagen, nombre y precio para el inicio
+function obtenerUltimosProductosInicio(mysqli $conexion) {
+
+    $sql = "SELECT imagen, nombre, precio 
+            FROM productos 
+            WHERE activo = 1 
+            ORDER BY id_producto DESC 
+            LIMIT 4";
+            
+    $resultado = mysqli_query($conexion, $sql);
+    
+    $productos = [];
+    if ($resultado) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
+            $productos[] = $fila;
+        }
+        mysqli_free_result($resultado);
+    }
+    
+    return $productos;
+}
+
+// Función para obtener productos ACTIVOS para el catálogo público, con filtro, orden y paginación
+// Solo trae la porción de datos que el usuario está viendo en ese momento: ni todos los productos, ni la descripción completa
+function obtenerProductosCatalogo(mysqli $conexion, ?int $idCategoria = null, string $orden = 'recientes', int $pagina = 1, int $porPagina = 12) {
+
+    $offset = ($pagina - 1) * $porPagina;
+
+    $sql = "SELECT id_producto, nombre, precio, imagen, SUBSTRING(descripcion, 1, 150) AS descripcion 
+            FROM productos 
+            WHERE activo = 1";
+
+    $tipos = "";
+    $parametros = [];
+
+    if ($idCategoria !== null) {
+        $sql .= " AND id_categoria = ?";
+        $tipos .= "i";
+        $parametros[] = $idCategoria;
+    }
+
+    switch ($orden) {
+        case 'precio_asc':
+            $sql .= " ORDER BY precio ASC";
+            break;
+        case 'precio_desc':
+            $sql .= " ORDER BY precio DESC";
+            break;
+        default:
+            $sql .= " ORDER BY id_producto DESC";
+    }
+
+    $sql .= " LIMIT ? OFFSET ?";
+    $tipos .= "ii";
+    $parametros[] = $porPagina;
+    $parametros[] = $offset;
+
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param($tipos, ...$parametros);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+
+    $productos = [];
+    while ($fila = $resultado->fetch_assoc()) {
+        $productos[] = $fila;
+    }
+    $stmt->close();
+
+    return $productos;
+}
+
+// Función para contar productos ACTIVOS según el filtro (necesaria para calcular el nº de páginas en catalogo.php)
+function contarProductosCatalogo(mysqli $conexion, ?int $idCategoria = null): int {
+
+    $sql = "SELECT COUNT(*) AS total FROM productos WHERE activo = 1";
+    $tipos = "";
+    $parametros = [];
+
+    if ($idCategoria !== null) {
+        $sql .= " AND id_categoria = ?";
+        $tipos .= "i";
+        $parametros[] = $idCategoria;
+    }
+
+    $stmt = $conexion->prepare($sql);
+    if ($tipos !== "") {
+        $stmt->bind_param($tipos, ...$parametros);
+    }
+    $stmt->execute();
+    $fila = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    return (int) $fila['total'];
+}
+?>
