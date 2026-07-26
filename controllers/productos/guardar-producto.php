@@ -21,6 +21,12 @@ require_once __DIR__ . '/../../includes/conexion.php';
         $imagen = subirFoto($_FILES['imagen'], $nombre, 10000000);
         $nota = subirMP3($_FILES["nota"], $nombre);
 
+        // Si la imagen ha fallado (formato no válido, demasiado pesada, etc.), no seguimos
+        if ($imagen === false) {
+            header("Location: ../../views/admin/productos/admin-alta-producto.php?status=error");
+            exit();
+        }
+
         // Modo PRO Seria con POO y MVC *
 
         // Modo estructurado (Scripting)

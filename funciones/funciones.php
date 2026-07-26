@@ -8,46 +8,66 @@ function ver(mixed $dato){
 
 }
 
-function subirFoto(array $foto, $nombreProducto = "", $pesoMaximo = 5000000 ){
- 
-        if($nombreProducto != ""){
-                $nombreArchivo = limpiar_caracteres_especiales($nombreProducto);
-        }else{
-            $nombreArchivo = limpiar_caracteres_especiales($foto["name"]);
-            $nombreArchivo = cortarCadenaFinal($nombreArchivo, "."); 
-        }  
+function subirFoto(array $foto, $nombreProducto = "", $pesoMaximo = 5000000) {
 
-        // nombrearchivo.png
-        // nombrearchivo_3443434.png
-        //nombrearchivo_3443434_34343.png
-        if((strpos($foto["type"],"png") || strpos($foto["type"],"jpeg") || strpos($foto["type"],"webp")) && $foto["size"] <= $pesoMaximo){
-            if(strpos($foto["type"],"png")){
-                $extension = ".png";
-            }else if(strpos($foto["type"],"jpeg")){
-                $extension = ".jpg";
-            }else{
-                $extension = ".webp";
-            }
-
-            $nombreFinal = $nombreArchivo.$extension;
-            if (file_exists(__DIR__ . "/../img/productos/" . $nombreFinal)) {
-                //esto es si existe
-                $ramdom = time();
-                $nombreFinal = $nombreArchivo.$ramdom.$extension; 
-            }
-
-            if(!move_uploaded_file($foto["tmp_name"], __DIR__ . "/../img/productos/" . $nombreFinal)){
-                echo "Error del servidor";
-            }else{
-                // esto es la victoria
-                return $nombreFinal;
-            }
-
-        }else{
-
-            echo "La foto debe ser jpg, png o webp";
-        }
+    // 1. Si la subida dio error en el servidor, frenamos
+    if (!isset($foto["error"]) || $foto["error"] !== UPLOAD_ERR_OK) {
+        return false;
     }
+
+    // 2. Comprobar peso
+    if ($foto["size"] > $pesoMaximo) {
+        return false;
+    }
+
+    // 3. Obtener el tipo real del archivo con finfo 
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $tipoReal = $finfo->file($foto["tmp_name"]);
+
+    $extensiones = [
+        "image/png"  => ".png",
+        "image/jpeg" => ".jpg",
+        "image/webp" => ".webp"
+    ];
+
+    // Si el tipo no coincide con la lista, salimos
+    if (!isset($extensiones[$tipoReal])) {
+        return false;
+    }
+
+    $extension = $extensiones[$tipoReal];
+
+    // 4. Nombre base (manteniendo tus funciones limpiar y cortar)
+    if ($nombreProducto != "") {
+        $nombreArchivo = limpiar_caracteres_especiales($nombreProducto);
+    } else {
+        $nombreArchivo = limpiar_caracteres_especiales($foto["name"]);
+        $nombreArchivo = cortarCadenaFinal($nombreArchivo, "."); 
+    }  
+
+    // Si la limpieza deja la cadena vacía, asignamos un nombre por defecto
+    if (empty($nombreArchivo)) {
+        $nombreArchivo = "producto";
+    }
+
+    // 5. Gestión de nombre único si ya existe
+    $directorioDestino = __DIR__ . "/../img/productos/";
+    $nombreFinal = $nombreArchivo . $extension;
+
+    if (file_exists($directorioDestino . $nombreFinal)) {
+        $random = time();
+        $nombreFinal = $nombreArchivo . $random . $extension; 
+    }
+
+    // 6. Mover archivo
+    if (!move_uploaded_file($foto["tmp_name"], $directorioDestino . $nombreFinal)) {
+        return false;
+    }
+
+    // Retorna siempre el nombre final si la subida fue correcta
+    return $nombreFinal;
+}
+
 
 function subirMP3(array $nota, $nombreProducto = "", $pesoMaximo = 5000000 ){
  
@@ -132,10 +152,9 @@ function limpiar_caracteres_especiales(string $cadena) {
         array('n', 'N', 'c', 'C'),
         $cadena
     );
-//para ampliar los caracteres a reemplazar agregar lineas de este tipo:
-//$archivo = str_replace("caracter-que-queremos-cambiar","caracter-por-el-cual-lo-vamos-a-cambiar",$archivo);
+    
     return $cadena;
-}
+} 
 
 function cortarCadenaFinal(string $cadena, $caracter = "."){
         // localicamos en que posición se haya la $subcadena, en nuestro caso la posicion es "7"

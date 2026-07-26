@@ -119,7 +119,7 @@ function contarProductosCatalogo(mysqli $conexion, ?int $idCategoria = null): in
 
     return (int) $fila['total'];
 }
-
+// Función para obtener un producto por su ID, incluyendo la categoría, solo si está activo
 function obtenerProductoPorId(mysqli $conexion, int $idProducto): ?array {
 
     $sql = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio, p.stock, p.imagen,
@@ -139,5 +139,77 @@ function obtenerProductoPorId(mysqli $conexion, int $idProducto): ?array {
     mysqli_stmt_close($stmt);
 
     return $producto ?: null;
+}
+
+// Función para obtener un producto por su ID, incluyendo la categoría, sin importar si está activo o no (para admin)
+function obtenerProductoPorIdAdmin(mysqli $conexion, int $idProducto): ?array {
+
+    $sql = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio, p.stock, p.imagen,
+                   p.diametro, p.peso, p.material, p.nota_musical, p.procedencia, p.id_categoria
+            FROM productos p
+            WHERE p.id_producto = ?";
+
+    $stmt = mysqli_prepare($conexion, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $idProducto);
+    mysqli_stmt_execute($stmt);
+
+    $resultado = mysqli_stmt_get_result($stmt);
+    $producto = mysqli_fetch_assoc($resultado);
+
+    mysqli_stmt_close($stmt);
+
+    return $producto ?: null;
+}
+
+// Función para actualizar un producto en la base de datos, incluyendo la imagen y la melodía
+function actualizarProducto(mysqli $conexion, int $idProducto, string $nombre, int $idCategoria, float $precio, int $stock, ?int $diametro, ?float $peso, ?string $material, ?string $procedencia, string $descripcion, string $imagen, ?string $nota): bool {
+
+    $sql = "UPDATE productos SET
+                nombre = ?, id_categoria = ?, precio = ?, stock = ?, diametro = ?, peso = ?,
+                material = ?, procedencia = ?, descripcion = ?, imagen = ?, nota_musical = ?
+            WHERE id_producto = ?";
+
+    $stmt = mysqli_prepare($conexion, $sql);
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "sidiidsssssi",
+        $nombre, $idCategoria, $precio, $stock, $diametro, $peso,
+        $material, $procedencia, $descripcion, $imagen, $nota, $idProducto
+    );
+    $resultado = mysqli_stmt_execute($stmt);
+
+    mysqli_stmt_close($stmt);
+
+    return $resultado;
+}
+
+// Función para hacer un borrado LÓGICO: no elimina el producto de la BD,
+// solo lo marca como inactivo para que deje de aparecer en la parte pública
+function eliminarProductoLogico(mysqli $conexion, int $idProducto): bool {
+ 
+    $sql = "UPDATE productos SET activo = 0 WHERE id_producto = ?";
+ 
+    $stmt = mysqli_prepare($conexion, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $idProducto);
+    $resultado = mysqli_stmt_execute($stmt);
+ 
+    mysqli_stmt_close($stmt);
+ 
+    return $resultado;
+}
+
+// Función para reactivar un producto que estaba desactivado (proceso inverso al borrado lógico)
+function reactivarProducto(mysqli $conexion, int $idProducto): bool {
+ 
+    $sql = "UPDATE productos SET activo = 1 WHERE id_producto = ?";
+ 
+    $stmt = mysqli_prepare($conexion, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $idProducto);
+    $resultado = mysqli_stmt_execute($stmt);
+ 
+    mysqli_stmt_close($stmt);
+ 
+    return $resultado;
 }
 ?>

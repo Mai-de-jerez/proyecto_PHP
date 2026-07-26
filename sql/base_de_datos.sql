@@ -16,8 +16,8 @@ USE sonido_interior;
 -- =====================================================================
 CREATE TABLE usuarios (
     id_usuario      INT AUTO_INCREMENT PRIMARY KEY,
-    nombre          VARCHAR(100) NOT NULL,
-    email           VARCHAR(150) NOT NULL,
+    nombre          VARCHAR(100) ,
+    email           VARCHAR(150) NOT NULL, 
     usuario         VARCHAR(100) NOT NULL,
     password        VARCHAR(255) NOT NULL,
     rol             VARCHAR(50)  NOT NULL DEFAULT 'CLIENTE',

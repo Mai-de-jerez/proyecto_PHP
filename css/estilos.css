@@ -216,16 +216,7 @@ a {
     grid-template-columns: repeat(4, 1fr);
 }
 
-/* .tarjeta-producto {
-    background: #fffdf9;
-    border: 1px solid #eadfce;
-    border-radius: 12px;
-    padding: 16px;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 8px 20px rgba(83, 55, 30, 0.08);
-} */
-
+/* TARJETAS DE PRODUCTO */
 .tarjeta-producto {
     background: #fffdf9;
     border: 1px solid #eadfce;
@@ -237,6 +228,7 @@ a {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
 }
+
 
 .tarjeta-producto:hover {
     transform: translateY(-6px);
@@ -281,6 +273,7 @@ a {
     text-transform: uppercase;
 }
 
+/* FRANJA DE SERVICIOS */
 .franja-servicios {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -740,6 +733,14 @@ textarea {
     margin-top: 26px;
 }
 
+.acciones-formulario a {
+    height: 43px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+} 
+
 .vista-previa-admin {
     padding: 22px;
     align-self: start;
@@ -793,6 +794,11 @@ textarea {
     color: #356b2f;
 }
 
+.estado.inactivo {
+    background: #f3e4df;
+    color: #a33a2a;
+}
+
 .acciones-tabla {
     display: flex;
     gap: 10px;
@@ -807,6 +813,58 @@ textarea {
     border-radius: 6px;
     border: 1px solid #eadfce;
     background: #fffaf2;
+}
+
+/* MODAL DE CONFIRMACIÓN BORRADO */
+.modal-confirmacion-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(47, 40, 31, 0.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    z-index: 1000;
+}
+
+.modal-confirmacion-card {
+    width: 460px;
+    background: rgba(255, 253, 249, .98);
+    border: 1px solid #eadfce;
+    border-radius: 16px;
+    padding: 42px;
+    box-shadow: 0 22px 60px rgba(69, 45, 25, 0.25);
+    text-align: center;
+}
+
+.modal-confirmacion-icono {
+    width: 44px;
+    height: 44px;
+    border: 1px solid #b9823d;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #b9823d;
+    font-size: 18px;
+}
+
+.modal-confirmacion-card h3 {
+    font-size: 22px;
+    margin-bottom: 14px;
+}
+
+.modal-confirmacion-card p {
+    color: #6d5b4e;
+    margin-bottom: 28px;
+}
+
+.modal-confirmacion-card .acciones-formulario {
+    justify-content: center;
+    margin-top: 0;
 }
 
 /* PAGINACION */
@@ -865,6 +923,14 @@ textarea {
 
     .hero-texto h2 {
         font-size: 44px;
+    }
+
+    .acciones-formulario {
+        flex-direction: column;
+    }
+
+    .acciones-formulario .boton {
+        width: 100%;
     }
 
     .beneficios-superiores,
