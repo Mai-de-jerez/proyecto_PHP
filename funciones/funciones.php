@@ -69,37 +69,60 @@ function subirFoto(array $foto, $nombreProducto = "", $pesoMaximo = 5000000) {
 }
 
 
-function subirMP3(array $nota, $nombreProducto = "", $pesoMaximo = 5000000 ){
+function subirMP3(array $nota, $nombreProducto = "", $pesoMaximo = 5000000) {
  
-    if($nombreProducto != ""){
-            $nombreArchivo = limpiar_caracteres_especiales($nombreProducto);
-    }else{
-           $nombreArchivo = limpiar_caracteres_especiales($nota["name"]);
-           $nombreArchivo = cortarCadenaFinal($nombreArchivo, "."); 
+    // 1. Si no se ha subido ningún archivo, no es un error: el campo es opcional
+    if (!isset($nota["error"]) || $nota["error"] === UPLOAD_ERR_NO_FILE) {
+        return null;
     }
-
-    if((strpos($nota["type"],"mp3") || strpos($nota["type"],"mpeg")) && $nota["size"] <= $pesoMaximo ){
-
-        $extension =  ".mp3";
-        $nombreFinal = $nombreArchivo.$extension;
-        if(file_exists(__DIR__ . "/../sonidos/" . $nombreFinal)){
-            //esto es si existe
-            $ramdom = time();
-            $nombreFinal = $nombreArchivo.$ramdom.$extension;
-        }
-
-        
-        if(!move_uploaded_file($nota["tmp_name"], __DIR__ . "/../sonidos/" . $nombreFinal)){
-            echo "Error del servidor";
-        }else{
-            // esto es la victoria
-            return $nombreFinal;
-        }
-
-    }else{
-        echo "El archivo de sonido debe ser un MP3 válido y no superar el tamaño máximo.";
+ 
+    // 2. Si la subida dio error en el servidor, frenamos
+    if ($nota["error"] !== UPLOAD_ERR_OK) {
+        return false;
     }
-
+ 
+    // 3. Comprobar peso
+    if ($nota["size"] > $pesoMaximo) {
+        return false;
+    }
+ 
+    // 4. Obtener el tipo real del archivo con finfo 
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $tipoReal = $finfo->file($nota["tmp_name"]);
+ 
+    if ($tipoReal !== "audio/mpeg") {
+        return false;
+    }
+ 
+    $extension = ".mp3";
+ 
+    // 5. Nombre base 
+    if ($nombreProducto != "") {
+        $nombreArchivo = limpiar_caracteres_especiales($nombreProducto);
+    } else {
+        $nombreArchivo = limpiar_caracteres_especiales($nota["name"]);
+        $nombreArchivo = cortarCadenaFinal($nombreArchivo, ".");
+    }
+ 
+    if (empty($nombreArchivo)) {
+        $nombreArchivo = "producto";
+    }
+ 
+    // 6. Gestión de nombre único si ya existe
+    $directorioDestino = __DIR__ . "/../sonidos/";
+    $nombreFinal = $nombreArchivo . $extension;
+ 
+    if (file_exists($directorioDestino . $nombreFinal)) {
+        $random = time();
+        $nombreFinal = $nombreArchivo . $random . $extension;
+    }
+ 
+    // 7. Mover archivo
+    if (!move_uploaded_file($nota["tmp_name"], $directorioDestino . $nombreFinal)) {
+        return false;
+    }
+ 
+    return $nombreFinal;
 }
 
 function limpiar_caracteres_especiales(string $cadena) {

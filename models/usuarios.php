@@ -18,8 +18,23 @@ function obtenerUsuarioPorUsername(mysqli $conexion, string $usuario): ?array {
     return $usuarioEncontrado; 
 }
 
+function obtenerUsuarioPorEmail(mysqli $conexion, string $email): ?array {
+    $sql = "SELECT id_usuario, usuario, email, password, rol FROM usuarios WHERE email = ?";
+    
+    $stmt = mysqli_prepare($conexion, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $email);
+    mysqli_stmt_execute($stmt);
+    
+    $resultado = mysqli_stmt_get_result($stmt);
+    $usuarioEncontrado = mysqli_fetch_assoc($resultado);
+    
+    mysqli_stmt_close($stmt);
+    
+    return $usuarioEncontrado; 
+}
+
 function crearUsuario(mysqli $conexion, string $usuario, string $email, string $passwordHash): bool {
-    // Creamos usuarios solo con rol CLIENTE y sin nombre, ya que el nombre es opcional
+    // Creamos usuarios solo con rol CLIENTE y sin nombre ya que el nombre se puede agregar después en el perfil del usuario
     $sql = "INSERT INTO usuarios (usuario, email, password) VALUES (?, ?, ?)";
  
     $stmt = mysqli_prepare($conexion, $sql);
@@ -30,4 +45,5 @@ function crearUsuario(mysqli $conexion, string $usuario, string $email, string $
  
     return $resultado;
 }
+
 ?>

@@ -1,4 +1,6 @@
 <?php
+// Con esto compruebo que la sesión esté iniciada antes de usar $_SESSION, 
+// para evitar errores si se incluye este archivo en páginas donde no se haya iniciado la sesión.
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

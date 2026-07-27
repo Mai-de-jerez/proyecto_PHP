@@ -30,7 +30,7 @@ if (
         exit();
     }
 
-    // Aquí es donde se genera el hash: nunca se guarda la contraseña en texto plano
+    // Hasheamos la contraseña antes de guardarla en la base de datos
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
     $creado = crearUsuario($conexion, $usuario, $email, $passwordHash);

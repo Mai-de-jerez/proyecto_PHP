@@ -27,6 +27,13 @@ require_once __DIR__ . '/../../includes/conexion.php';
             exit();
         }
 
+        // Si se intentó subir un mp3 pero no era válido, tampoco seguimos
+        // (si no se subió nada, $nota será null, y eso sí está permitido)
+        if ($nota === false) {
+            header("Location: ../../views/admin/productos/admin-alta-producto.php?status=error");
+            exit();
+        }
+
         // Modo PRO Seria con POO y MVC *
 
         // Modo estructurado (Scripting)

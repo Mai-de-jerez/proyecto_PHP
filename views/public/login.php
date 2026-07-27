@@ -21,15 +21,11 @@ include __DIR__ . "/../../includes/menu-login.php";
             <label for="password">Contraseña</label>
             <input type="password" id="password" name="password" placeholder="Introduce tu contraseña">
 
-            <div class="opciones-login">
-                <label class="checkbox"><input type="checkbox" name="recordarme"> Recordarme</label>
-            </div>
-
             <button type="submit" class="boton principal bloque">Entrar</button>
 
             <div class="opciones-login">
                 <a href="views/public/registro.php">¿No tienes una cuenta? Crea aquí una</a>
-                <a href="#">¿Has olvidado tu contraseña?</a>
+                <a href="views/public/recuperar-password.php">¿Has olvidado tu contraseña?</a>
             </div>
         </form>
     </section>

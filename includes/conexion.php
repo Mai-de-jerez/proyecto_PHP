@@ -1,5 +1,5 @@
 <?php
-
+// configuramos los datos para hablar con mi base de datos de mysql
 $servidor = "127.0.0.1";
 $usuario = "root";
 $password = getenv('PASSWORD_DB');

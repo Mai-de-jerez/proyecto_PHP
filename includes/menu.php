@@ -16,8 +16,8 @@ if (!isset($pagina)) {
         <a href="views/public/index.php" class="<?php echo ($pagina == 'inicio') ? 'activo' : ''; ?>">Inicio</a>
         <a href="views/public/productos/catalogo.php" class="<?php echo ($pagina == 'catalogo') ? 'activo' : ''; ?>">Catálogo</a>
         <a href="#">Sonoterapia</a>
-        <a href="#">Sobre nosotros</a>
-        <a href="#">Contacto</a> 
+        <a href="views/public/sobre-nosotros.php" class="<?php echo ($pagina == 'nosotros') ? 'activo' : ''; ?>">Sobre nosotros</a>
+        <a href="views/public/contacto.php" class="<?php echo ($pagina == 'contacto') ? 'activo' : ''; ?>">Contacto</a>
     </nav>
 
     <div class="acciones-header">

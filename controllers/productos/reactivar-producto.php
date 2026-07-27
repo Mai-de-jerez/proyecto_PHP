@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../includes/seguridad.php';
 require_once __DIR__ . '/../../models/productos.php';
 require_once __DIR__ . '/../../includes/conexion.php';
 
+// con ctype_digit verificamos que sea un numero entero positivo, si no lo es, devolvemos null
 $idProducto = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? (int) $_GET['id'] : null;
 
 if ($idProducto === null) {

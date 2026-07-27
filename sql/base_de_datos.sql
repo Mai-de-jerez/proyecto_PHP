@@ -154,5 +154,18 @@ CREATE TABLE carrito_producto (
 ) ENGINE=InnoDB;
 
 -- =====================================================================
+-- TABLA 9: password_resets
+-- =====================================================================
+CREATE TABLE password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    token VARCHAR(64) NOT NULL,
+    expira DATETIME NOT NULL,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX (token),
+    INDEX (email)
+);
+
+-- =====================================================================
 -- FIN DEL SCRIPT
 -- =====================================================================
