@@ -33,7 +33,7 @@ function obtenerUsuarioPorEmail(mysqli $conexion, string $email): ?array {
     return $usuarioEncontrado; 
 }
 
-function crearUsuario(mysqli $conexion, string $usuario, string $email, string $passwordHash): bool {
+function registroUsuario(mysqli $conexion, string $usuario, string $email, string $passwordHash): bool {
     // Creamos usuarios solo con rol CLIENTE y sin nombre ya que el nombre se puede agregar después en el perfil del usuario
     $sql = "INSERT INTO usuarios (usuario, email, password) VALUES (?, ?, ?)";
  

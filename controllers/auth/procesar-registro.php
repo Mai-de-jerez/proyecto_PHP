@@ -33,7 +33,7 @@ if (
     // Hasheamos la contraseña antes de guardarla en la base de datos
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-    $creado = crearUsuario($conexion, $usuario, $email, $passwordHash);
+    $creado = registroUsuario($conexion, $usuario, $email, $passwordHash);
     mysqli_close($conexion);
 
     if ($creado) {

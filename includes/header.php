@@ -12,6 +12,7 @@ if (!isset($bodyClass)) {
     $bodyClass = "";
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -22,3 +23,26 @@ if (!isset($bodyClass)) {
     <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body class="<?php echo $bodyClass; ?>">
+
+<?php if (isset($_SESSION['mensaje_exito']) || isset($_SESSION['mensaje_error'])): 
+    $esExito = isset($_SESSION['mensaje_exito']);
+    $textoMensaje = $esExito ? $_SESSION['mensaje_exito'] : $_SESSION['mensaje_error'];
+    $claseToast = $esExito ? 'toast-exito' : 'toast-error';
+    unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
+?>
+    <div id="toast-msg" class="toast-notificacion <?php echo $claseToast; ?>">
+        <span><?php echo htmlspecialchars($textoMensaje); ?></span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toast = document.getElementById('toast-msg');
+            if (toast) {
+                setTimeout(() => {
+                    toast.classList.add('oculto');
+                    setTimeout(() => toast.remove(), 500);
+                }, 3000);
+            }
+        });
+    </script>
+<?php endif; ?>

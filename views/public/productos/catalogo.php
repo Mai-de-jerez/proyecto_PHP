@@ -76,15 +76,17 @@ include __DIR__ . "/../../../includes/menu.php";
                     <?php endif; ?>
                     
                     <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                    
-                    <!-- Mostramos la descripción dinámica corta -->
-                    <p><?php echo htmlspecialchars($producto['descripcion']); ?></p>
-                    
+
                     <p class="precio"><?php echo number_format($producto['precio'], 2, ',', '.'); ?> €</p>
                     
                     <?php $queryActual = http_build_query(['categoria' => $categoriaSeleccionada, 'orden' => $ordenSeleccionado, 'pag' => $paginaActual]); ?>
                     <!-- Enlazamos dinámicamente pasándole el id por la URL -->
                     <a href="views/public/productos/detalle-producto.php?id=<?php echo $producto['id_producto']; ?>&volver=<?php echo urlencode($queryActual); ?>" class="boton secundario">Ver producto</a>
+                    <form method="POST" action="controllers/carrito/agregar-producto.php" style="display:inline;">
+                        <input type="hidden" name="id_producto" value="<?php echo $producto['id_producto']; ?>">
+                        <input type="hidden" name="cantidad" value="1">
+                        <button type="submit" class="boton">Añadir al carrito</button>
+                    </form>
                 </article>
             <?php endforeach; ?>
         <?php endif; ?>

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../models/usuarios.php';
+require_once __DIR__ . '/../../models/carrito.php';
 require_once __DIR__ . '/../../includes/conexion.php';
 
 
@@ -17,11 +18,19 @@ if (isset($_POST) && !empty($_POST["usuario"]) && !empty($_POST["password"])) {
     // usamos password_verify para comparar la contraseña ingresada con la almacenada en la base de datos
     if ($usuarioEncontrado && password_verify($password, $usuarioEncontrado["password"])) {
 
-    session_regenerate_id(true); // Regeneramos el ID de sesión para evitar el ataque de fijación de sesión
+        // Antes de guardar sus cosas limpiamos la sesión para evitar que se mezclen datos de sesiones anteriores
+        session_unset();
+        session_regenerate_id(true); // Regeneramos el ID de sesión para evitar el ataque de fijación de sesión
 
-    $_SESSION["id_usuario"] = $usuarioEncontrado["id_usuario"];
-    $_SESSION["usuario"] = $usuarioEncontrado["usuario"];
-    $_SESSION["rol"] = $usuarioEncontrado["rol"];
+        $_SESSION["id_usuario"] = $usuarioEncontrado["id_usuario"];
+        $_SESSION["usuario"] = $usuarioEncontrado["usuario"];
+        $_SESSION["rol"] = $usuarioEncontrado["rol"];
+
+        // habrá que saber cuantos articulos tiene el carrito si los tiene para mostrar el número en el icono del carrito
+        $idCarrito = obtenerOCrearCarrito($conexion, $usuarioEncontrado["id_usuario"]);
+        $_SESSION['cantidades_carrito'] = contarUnidadesCarrito($conexion, $idCarrito);
+        // Cerramos la conexión a la base de datos porque me da mal rollo tenerla abierta.
+        mysqli_close($conexion);
 
         // Según el rol, mandamos a un sitio o a otro
         if ($usuarioEncontrado["rol"] === "ADMIN") {

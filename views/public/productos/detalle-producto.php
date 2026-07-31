@@ -83,7 +83,11 @@ include __DIR__ . "/../../../includes/menu.php";
 
                 <?php if ($producto['stock'] > 0): ?>
                     <p class="detalle-producto-stock disponible">✓ Disponible (<?php echo $producto['stock']; ?> unidades)</p>
-                    <a href="#" class="boton principal bloque">Añadir al carrito</a>
+                    <form action="controllers/carrito/agregar-producto.php" method="post">
+                        <input type="hidden" name="id_producto" value="<?php echo $producto['id_producto']; ?>">
+                        <input type="hidden" name="cantidad" value="1">
+                        <button type="submit" class="boton principal bloque">Añadir al carrito</button>
+                    </form>
                 <?php else: ?>
                     <p class="detalle-producto-stock agotado">✕ Agotado temporalmente</p>
                 <?php endif; ?>
