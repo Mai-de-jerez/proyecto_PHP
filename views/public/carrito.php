@@ -95,7 +95,7 @@ include __DIR__ . '/../../includes/menu.php';
                 <span>Total:</span>
                 <span><?php echo number_format($totalCarrito, 2, ',', '.'); ?> €</span>
             </div>
-            <a href="#" class="boton principal cta-btn">Finalizar compra</a>
+            <a href="views/public/checkout.php" class="boton principal cta-btn">Finalizar compra</a>
         </aside>
 
     <?php endif; ?>
