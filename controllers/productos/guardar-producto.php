@@ -1,12 +1,16 @@
 <?php
+require_once __DIR__ . '/../../includes/seguridad.php';
 require_once __DIR__ . '/../../funciones/funciones.php';
 require_once __DIR__ . '/../../includes/conexion.php';
+require_once __DIR__ . '/../../models/productos.php';
 
     // Verificamos que los datos vengan por POST y que al menos el nombre esté relleno
     //isset -> si esta instanciada?  - unset .> la deisntancia  
     //empty -> esta vacia?
     if (isset($_POST) && !empty($_POST["nombre"])) {
 
+        // Ya no hace falta addslashes, usamos prepared statements en la consulta SQL,
+        // pero aún así lo pondré porque me lo enseñó mi profe este truco y no olvidarlo
         $nombre = addslashes($_POST["nombre"]);
         $categoria = addslashes($_POST["id_categoria"]);
         $precio = floatval($_POST["precio"]); // Convertimos a float para evitar problemas de tipo
@@ -21,66 +25,29 @@ require_once __DIR__ . '/../../includes/conexion.php';
         $imagen = subirFoto($_FILES['imagen'], $nombre, 10000000);
         $nota = subirMP3($_FILES["nota"], $nombre);
 
-        // Si la imagen ha fallado (formato no válido, demasiado pesada, etc.), no seguimos
-        if ($imagen === false) {
+        // Si la imagen o la melodía han fallado (formato no válido, demasiado pesada, etc.), no seguimos
+        if ($imagen === false || $nota === false) {
+            $_SESSION['mensaje_error'] = "Error con el archivo de imagen o la melodía (formato no válido o peso superior al permitido).";
             header("Location: ../../views/admin/productos/admin-alta-producto.php?status=error");
             exit();
         }
 
-        // Si se intentó subir un mp3 pero no era válido, tampoco seguimos
-        // (si no se subió nada, $nota será null, y eso sí está permitido)
-        if ($nota === false) {
-            header("Location: ../../views/admin/productos/admin-alta-producto.php?status=error");
-            exit();
-        }
+        // Llamamos a la función del modelo para insertar
+        $exito = insertarProducto($conexion, $nombre, $categoria, $precio, $stock, $diametro, $peso, $material, $procedencia, $descripcion, $imagen, $nota);
 
-        // Modo PRO Seria con POO y MVC *
+        mysqli_close($conexion);
 
-        // Modo estructurado (Scripting)
-        
-        /*
-            contectarme
-            crear la query
-            ejecutarla y lo guardara en la base de datos
-        */ 
-        $sql = "INSERT INTO productos (nombre, id_categoria, precio, stock, diametro, peso, material, procedencia, descripcion, imagen, nota_musical) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-        $statement = mysqli_prepare($conexion, $sql);
-
-        mysqli_stmt_bind_param(
-            $statement,
-            "sidiidsssss", 
-            $nombre,
-            $categoria,    
-            $precio,
-            $stock,
-            $diametro,
-            $peso,
-            $material,
-            $procedencia,
-            $descripcion,
-            $imagen,        
-            $nota         
-        );
-        // Ejecutamos la inserción estructurada
-        if (mysqli_stmt_execute($statement)) {
-            // Cierre de flujos estructurados antes de redirigir
-            mysqli_stmt_close($statement);
-            mysqli_close($conexion);
-
-            // Si ha funcionado, mandamos al usuario al listado con un aviso de éxito
+        if ($exito) {
+            $_SESSION['mensaje_exito'] = "Producto guardado con éxito.";
             header("Location: ../../views/admin/productos/admin-listado-productos.php?status=success");
             exit();
         } else {
-            mysqli_stmt_close($statement);
-            mysqli_close($conexion);
-
-            // Si falla la base de datos, volvemos al alta mostrando el fallo
+            $_SESSION['mensaje_error'] = "Error al guardar el producto.";
             header("Location: ../../views/admin/productos/admin-alta-producto.php?status=error");
             exit();
         }
 
     } else {
-        // Si intentan entrar de forma directa al archivo sin pasar por el formulario, denegamos el paso
         header("Location: ../../views/admin/productos/admin-alta-producto.php");
         exit();
     }

@@ -56,9 +56,13 @@ include __DIR__ . '/../../../includes/menu-admin.php';
                                     <?php endif; ?>
                                 </td>
                                 <td class="acciones-tabla">
-                                    <a href="admin-editar-categoria.php?id=<?php echo $cat['id_categoria']; ?>">✎</a>
-                                    <a href="admin-eliminar-categoria.php?id=<?php echo $cat['id_categoria']; ?>" onclick="return confirm('¿Seguro que quieres eliminar esta categoría?');">🗑</a>
-                                </td>
+                                    <a href="views/admin/categorias/admin-alta-categoria.php?id=<?php echo $cat['id_categoria']; ?>">✎</a>
+                                    <?php if ($cat['activo'] == 1): ?>
+                                        <a href="views/admin/categorias/admin-eliminar-categoria.php?id=<?php echo $cat['id_categoria']; ?>">🗑</a>
+                                    <?php else: ?>
+                                        <a href="controllers/categorias/reactivar-categoria.php?id=<?php echo $cat['id_categoria']; ?>">↺</a>
+                                    <?php endif; ?>
+                                </td> 
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

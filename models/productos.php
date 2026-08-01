@@ -161,6 +161,39 @@ function obtenerProductoPorIdAdmin(mysqli $conexion, int $idProducto): ?array {
     return $producto ?: null;
 }
 
+// Función para registrar un nuevo producto en la base de datos
+function insertarProducto(mysqli $conexion, string $nombre, int $idCategoria, float $precio, int $stock, int $diametro, float $peso, string $material, string $procedencia, string $descripcion, string $imagen, ?string $nota): bool {
+
+    $sql = "INSERT INTO productos (nombre, id_categoria, precio, stock, diametro, peso, material, procedencia, descripcion, imagen, nota_musical) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            
+    $stmt = mysqli_prepare($conexion, $sql);
+    
+    mysqli_stmt_bind_param(
+        $stmt,
+        "sidiidsssss", 
+        $nombre,
+        $idCategoria,    
+        $precio,
+        $stock,
+        $diametro,
+        $peso,
+        $material,
+        $procedencia,
+        $descripcion,
+        $imagen,        
+        $nota        
+    );
+    
+    $resultado = mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+
+    return $resultado;
+}
+
+
+
+
 // Función para actualizar un producto en la base de datos, incluyendo la imagen y la melodía
 function actualizarProducto(mysqli $conexion, int $idProducto, string $nombre, int $idCategoria, float $precio, int $stock, ?int $diametro, ?float $peso, ?string $material, ?string $procedencia, string $descripcion, string $imagen, ?string $nota): bool {
 
