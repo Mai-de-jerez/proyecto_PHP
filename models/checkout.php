@@ -53,12 +53,17 @@ function crearDetallePedido(mysqli $conexion, int $idPedido, int $idProducto, in
 }
 
 /**
- * Resta las unidades compradas del stock del producto en la tabla `productos`.
+ * Resta las unidades compradas del stock del producto y, si se agota,
+ * lo desactiva automáticamente para que desaparezca del catálogo.
  */
 function descontarStockProducto(mysqli $conexion, int $idProducto, int $cantidad): bool {
-    $sql = "UPDATE productos SET stock = stock - ? WHERE id_producto = ?";
+    $sql = "UPDATE productos 
+            SET stock = stock - ?, 
+                activo = CASE WHEN stock - ? <= 0 THEN 0 ELSE activo END 
+            WHERE id_producto = ?";
+    
     $stmt = mysqli_prepare($conexion, $sql);
-    mysqli_stmt_bind_param($stmt, "ii", $cantidad, $idProducto);
+    mysqli_stmt_bind_param($stmt, "iii", $cantidad, $cantidad, $idProducto);
     $resultado = mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 

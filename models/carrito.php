@@ -152,4 +152,17 @@ function contarUnidadesCarrito(mysqli $conexion, int $idCarrito): int {
     return (int) $fila['total'];
 }
 
+// Obtiene el stock actual de un producto específico desde la base de datos
+function obtenerStockProducto(mysqli $conexion, int $idProducto): int {
+    $sql = "SELECT stock FROM productos WHERE id_producto = ?";
+    $stmt = mysqli_prepare($conexion, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $idProducto);
+    mysqli_stmt_execute($stmt);
+    $resultado = mysqli_stmt_get_result($stmt);
+    $producto = mysqli_fetch_assoc($resultado);
+    mysqli_stmt_close($stmt);
+
+    return $producto ? (int) $producto['stock'] : 0;
+}
+
 ?>
