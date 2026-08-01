@@ -3,6 +3,10 @@ $titulo = "Login Administración | Sonido Interior";
 $bodyClass = "fondo-login";
 include __DIR__ . "/../../includes/header.php";
 include __DIR__ . "/../../includes/menu-login.php";
+
+$errores = $_SESSION['errores'] ?? [];
+$old = $_SESSION['form_old'] ?? [];
+unset($_SESSION['errores'], $_SESSION['form_old']);
 ?>
 
 <main class="login-contenedor">
@@ -13,13 +17,24 @@ include __DIR__ . "/../../includes/menu-login.php";
 
         <h3>Acceso al panel de administración</h3>
         <p>Introduce tus credenciales para continuar</p>
-        
-        <form class="formulario-login" action="controllers/auth/procesar-login.php" method="post">
-            <label for="usuario">Usuario</label>
-            <input type="text" id="usuario" name="usuario" placeholder="Introduce tu usuario">
 
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" placeholder="Introduce tu contraseña">
+        <?php if (isset($errores['general'])): ?>
+            <p id="error-general" style="color: #b03030; text-align: center;"><?= htmlspecialchars($errores['general']) ?></p>
+        <?php endif; ?>
+
+        <form class="formulario-login" action="controllers/auth/procesar-login.php" method="post" autocomplete="off">
+            <div class="campo">
+                <label for="usuario">Usuario</label>
+                <input type="text" id="usuario" name="usuario" placeholder="Introduce tu usuario"
+                       value="<?= htmlspecialchars($old['usuario'] ?? '') ?>">
+                <span class="mensaje-error" id="error-usuario"><?= isset($errores['usuario']) ? htmlspecialchars($errores['usuario']) : '' ?></span>
+            </div>
+
+            <div class="campo">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" placeholder="Introduce tu contraseña" autocomplete="current-password">
+                <span class="mensaje-error" id="error-password"><?= isset($errores['password']) ? htmlspecialchars($errores['password']) : '' ?></span>
+            </div>
 
             <button type="submit" class="boton principal bloque">Entrar</button>
 
@@ -30,5 +45,42 @@ include __DIR__ . "/../../includes/menu-login.php";
         </form>
     </section>
 </main>
+
+<script>
+function limpiarErroresLogin() {
+    document.querySelectorAll('.formulario-login input').forEach(input => {
+        input.classList.remove('input-error');
+    });
+    document.querySelectorAll('.formulario-login .mensaje-error').forEach(span => {
+        span.textContent = '';
+    });
+    const errorGeneral = document.getElementById('error-general');
+    if (errorGeneral) errorGeneral.style.display = 'none';
+}
+
+document.querySelectorAll('.formulario-login input').forEach(input => {
+    input.addEventListener('input', limpiarErroresLogin);
+});
+
+document.querySelector('.formulario-login').addEventListener('submit', (e) => {
+    const usuario = document.getElementById('usuario').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (usuario === '' || password === '') {
+        e.preventDefault();
+        if (usuario === '') {
+            marcarErrorLogin('usuario', 'error-usuario', 'Introduce tu usuario.');
+        }
+        if (password === '') {
+            marcarErrorLogin('password', 'error-password', 'Introduce tu contraseña.');
+        }
+    }
+});
+
+function marcarErrorLogin(idInput, idSpan, mensaje) {
+    document.getElementById(idInput).classList.add('input-error');
+    document.getElementById(idSpan).textContent = mensaje;
+}
+</script>
 
 <?php include __DIR__ . "/../../includes/footer.php"; ?>

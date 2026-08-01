@@ -8,18 +8,31 @@ require_once __DIR__ . '/../../includes/conexion.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['email'])) {
-    $email = trim($_POST['email']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email'] ?? '');
+    $errores = [];
+
+    if ($email === '') {
+        $errores['email'] = "El correo es obligatorio.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errores['email'] = "Introduce un email válido.";
+    }
+
+    if (!empty($errores)) {
+        mysqli_close($conexion);
+        $_SESSION['errores'] = $errores;
+        $_SESSION['form_old'] = ['email' => $email];
+        header("Location: ../../views/public/recuperar-password.php");
+        exit();
+    }
 
     // Comprobamos si el email existe en la tabla usuarios
-    $usuario = obtenerUsuarioPorEmail($conexion, $email); 
+    $usuario = obtenerUsuarioPorEmail($conexion, $email);
 
     if ($usuario) {
-        // Generamos token de 64 caracteres criptográficamente seguro
         $token = bin2hex(random_bytes(32));
 
         if (guardarTokenRecuperacion($conexion, $email, $token)) {
-            // Enviamos el correo con el enlace
             $mail = new PHPMailer(true);
             try {
                 $mail->isSMTP();
@@ -48,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['email'])) {
         }
     }
 
-    // SIEMPRE mostramos el mismo mensaje, independientemente de si el email existía o no
+    mysqli_close($conexion);
     $_SESSION['recuperacion_mensaje'] = "Si el correo introducido está registrado, recibirás las instrucciones en tu bandeja de entrada.";
     header("Location: ../../views/public/recuperar-password.php");
     exit();

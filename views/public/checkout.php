@@ -33,6 +33,10 @@ $titulo = "Finalizar compra | Sonido Interior";
 $pagina = "checkout";
 include __DIR__ . '/../../includes/header.php';
 include __DIR__ . '/../../includes/menu.php';
+
+$errores = $_SESSION['errores'] ?? [];
+$old = $_SESSION['form_old'] ?? [];
+unset($_SESSION['errores'], $_SESSION['form_old']);
 ?>
 
 <main class="contenedor">
@@ -46,14 +50,16 @@ include __DIR__ . '/../../includes/menu.php';
         <!-- Formulario con la dirección de envío -->
         <section class="checkout-formulario tabla-card">
             <h3>Datos de entrega</h3>
-            <form action="controllers/carrito/procesar-checkout.php" method="post">
+            <form class="formulario-checkout" action="controllers/carrito/procesar-checkout.php" method="post">
                 <div class="campo-form">
                     <label for="direccion_envio">Dirección de envío completa *</label>
                     <input type="text" 
                            id="direccion_envio" 
                            name="direccion_envio" 
                            maxlength="255" 
-                           placeholder="Ej: Calle Gran Vía 12, 3ºA, 28013 Madrid">
+                           placeholder="Ej: Calle Gran Vía 12, 3ºA, 28013 Madrid"
+                           value="<?= htmlspecialchars($old['direccion_envio'] ?? '') ?>">
+                    <span class="mensaje-error" id="error-direccion_envio"><?= isset($errores['direccion_envio']) ? htmlspecialchars($errores['direccion_envio']) : '' ?></span>
                 </div>
 
                 <div class="checkout-acciones">
@@ -82,5 +88,36 @@ include __DIR__ . '/../../includes/menu.php';
 
     </div>
 </main>
+
+<script>
+const formCheckout = document.querySelector('.formulario-checkout');
+if (formCheckout) {
+    const inputDireccion = document.getElementById('direccion_envio');
+
+    function validarDireccion() {
+        const valor = inputDireccion.value.trim();
+        const span = document.getElementById('error-direccion_envio');
+        if (valor === '') {
+            inputDireccion.classList.add('input-error');
+            span.textContent = 'Introduce una dirección de envío.';
+            return false;
+        }
+        inputDireccion.classList.remove('input-error');
+        span.textContent = '';
+        return true;
+    }
+
+    inputDireccion.addEventListener('blur', validarDireccion);
+    inputDireccion.addEventListener('input', () => {
+        if (inputDireccion.classList.contains('input-error')) validarDireccion();
+    });
+
+    formCheckout.addEventListener('submit', (e) => {
+        if (!validarDireccion()) {
+            e.preventDefault();
+        }
+    });
+}
+</script>
 
 <?php include __DIR__ . '/../../includes/footer.php'; ?>

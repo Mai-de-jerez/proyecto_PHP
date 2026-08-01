@@ -360,6 +360,26 @@ a {
     transform: translate(-50%, -15px);
 }
 
+/* para los inputs del formulario */
+
+.campo {
+    margin-bottom: 18px;
+}
+
+.mensaje-error {
+    display: block;
+    min-height: 1.1em;
+    color: #b03030;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+input.input-error {
+    border-color: #b03030 !important;
+    background: #fdf3f1;
+}
+
+
 @keyframes slideDown {
     from {
         opacity: 0;
@@ -540,7 +560,7 @@ a {
     text-align: left;
     margin-top: 24px;
 }
-
+.formulario-restablecer label,
 .formulario-login label,
 .formulario-admin label,
 .filtros-catalogo label {
@@ -658,10 +678,6 @@ textarea {
     font-size: 13px;
     font-weight: bold;
     margin-bottom: 8px;
-}
-
-.formulario-registro input {
-    margin-bottom: 18px;
 }
 
 .agrupacion-passwords {
@@ -934,7 +950,8 @@ textarea {
     color: #b9823d;
 }
 
-.zona-subida span {
+.zona-subida 
+{
     display: block;
     color: #8a735f;
     font-size: 13px;
