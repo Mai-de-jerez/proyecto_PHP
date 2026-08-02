@@ -127,13 +127,6 @@ function subirMP3(array $nota, $nombreProducto = "", $pesoMaximo = 5000000) {
 
 function limpiar_caracteres_especiales(string $cadena) {
 
-    //preg_replace($patrones, $sustituciones, $cadena);
-    //$cadena =  preg_replace("/[^a-zA-Z0-9\_\-]+/", "",$cadena);
-
-
-    //IMPORTANTE
-    //$cadena = mb_convert_encoding($cadena, 'ISO-8859-1', 'UTF-8');
-
     $cadena = str_replace(
         array('?', '¿'),
         array('_', '_'),

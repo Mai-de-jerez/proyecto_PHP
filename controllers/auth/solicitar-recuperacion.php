@@ -36,16 +36,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail = new PHPMailer(true);
             try {
                 $mail->isSMTP();
-                $mail->Host     = 'localhost';
+                $mail->Host = getenv('MAIL_HOST') ?: 'localhost';
                 $mail->Port     = 1025;
                 $mail->CharSet  = 'UTF-8';
 
                 $mail->setFrom('web@sonidointerior.com', 'Sonido Interior');
                 $mail->addAddress($email, $usuario['usuario'] ?? 'Usuario');
 
-                $enlace = "http://localhost/sonido-interior/views/public/restablecer-password.php?token=" . $token;
+                // Comprobamos si la variable de Docker MAIL_HOST existe en cualquier superglobal o getenv
+                $mailHost = $_ENV['MAIL_HOST'] ?? $_SERVER['MAIL_HOST'] ?? getenv('MAIL_HOST');
 
-                $mail->isHTML(true);
+                if ($mailHost === 'mailpit') {
+                    $enlace = "http://localhost:8083/sonido-interior/views/public/restablecer-password.php?token=" . $token;
+                } else {
+                    $enlace = "http://localhost/sonido-interior/views/public/restablecer-password.php?token=" . $token;
+                }
+
+                $mail->isHTML(true); 
                 $mail->Subject = "Restablece tu contraseña - Sonido Interior";
                 $mail->Body    = "
                     <p>Hola,</p>

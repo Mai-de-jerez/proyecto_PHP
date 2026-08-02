@@ -83,7 +83,7 @@ include __DIR__ . '/../../../includes/menu-admin.php';
                                     <?php endif; ?>
                                 </td>
                                 <td class="acciones-tabla">
-                                    <a href="views/admin/productos/admin-editar-producto.php?id=<?php echo $prod['id_producto']; ?>">✎</a>
+                                    <a href="views/admin/productos/admin-alta-producto.php?id=<?php echo $prod['id_producto']; ?>">✎</a>
                                     <?php if ($prod['activo'] == 1): ?>
                                         <a href="views/admin/productos/admin-eliminar-producto.php?id=<?php echo $prod['id_producto']; ?>">🗑</a>
                                     <?php else: ?>
