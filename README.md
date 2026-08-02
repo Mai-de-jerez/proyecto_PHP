@@ -45,3 +45,54 @@ Una vez situado dentro del directorio proyecto_PHP, ejecuta el levantamiento con
 ```bash
 docker compose up -d --build
 ```
+
+### 3. Verificación del estado:
+
+Comprobar con docker compose ps que los 3 contenedores están en verde y activos:
+
+-sonido-interior-web
+
+-sonido-interior-db
+
+-sonido-interior-mailpit
+
+Si quieres confirmar desde la consola de Ubuntu que los 3 contenedores están levantados y activos:
+
+```bash
+docker compose ps
+```
+
+### 4. URLs de acceso en el navegador:
+
+📱 Aplicación Web: http://localhost:8083/sonido-interior/
+
+✉️ Servidor Mailpit (Bandeja de correo de pruebas): http://localhost:8025
+
+### 5. Solución al problema del puerto 3306 ocupado
+
+```bash
+sudo systemctl stop mysql
+```
+
+O si fuera mariadb:
+```bash
+sudo systemctl stop mariadb
+```
+Luego para parar lo que haya quedado a medias
+Ejecuta en la terminal:
+
+```bash
+docker compose down
+```
+Y vuelve a levantar:
+
+```bash
+docker compose up -d
+```
+
+Si el contenedor sonido-interior-db aparece parado o con error (Exited), mira sus registros para ver qué le pasa:
+
+```bash
+docker compose logs db
+```
+
