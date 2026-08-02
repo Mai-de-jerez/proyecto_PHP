@@ -47,7 +47,7 @@ Una vez levantados los contenedores (`docker compose up -d`), abre tu navegador 
 Abre la terminal (o Git Bash) y ejecuta los siguientes comandos para clonar el proyecto y moverte dentro de la carpeta antes de configurar o levantar los contenedores:
 
 ```bash
-git clone [https://github.com/Mai-de-jerez/proyecto_PHP.git](https://github.com/Mai-de-jerez/proyecto_PHP.git)
+git clone https://github.com/Mai-de-jerez/proyecto_PHP.git
 cd proyecto_PHP
 ```
 
