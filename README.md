@@ -13,6 +13,19 @@ Según el sistema operativo que utilices, necesitas tener instalado lo siguiente
 * **Común a todos:** [Git](https://git-scm.com/)
 
 
+## ✉️ Verificación de Correos de Prueba (Mailpit)
+
+El entorno Docker incluye **Mailpit** como servidor SMTP de desarrollo para interceptar todos los correos enviados por la aplicación (como los enlaces de recuperación de contraseña) sin necesidad de mandar emails reales.
+
+### Acceso a la interfaz web de Mailpit:
+
+Una vez levantados los contenedores (`docker compose up -d`), abre tu navegador y entra a:
+
+👉 **[http://localhost:8025](http://localhost:8025)**
+
+*(Desde este panel web podrás ver de forma instantánea cualquier correo emitido por la plataforma durante las pruebas locales).*
+
+
 ## 🚀 Instalación y Despliegue
 
 ### 1. Clonar el repositorio y acceder al directorio
@@ -22,6 +35,7 @@ Abre la terminal (o Git Bash) y ejecuta los siguientes comandos para clonar el p
 ```bash
 git clone [https://github.com/Mai-de-jerez/proyecto_PHP.git](https://github.com/Mai-de-jerez/proyecto_PHP.git)
 cd proyecto_PHP
+```
 
 
 ### 2. Levantar los servicios
@@ -30,3 +44,4 @@ Una vez situado dentro del directorio proyecto_PHP, ejecuta el levantamiento con
 
 ```bash
 docker compose up -d --build
+```
