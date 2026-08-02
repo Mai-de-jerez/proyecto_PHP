@@ -1,3 +1,17 @@
+# 🎵 Proyecto PHP: Sonido Interior
+
+**Desarrollado por:** María del Carmen Martín Rodríguez ([@Mai-de-jerez](https://github.com/Mai-de-jerez))
+
+---
+
+## 📌 Descripción del Proyecto
+
+**Sonido Interior** es una aplicación web full-stack desarrollada en PHP orientada a la gestión de usuarios y la difusión de experiencias sonoras con cuencos de cuarzo y cuencos tibetanos.
+
+El sistema integra una arquitectura modular que incluye autenticación segura, gestión de sesiones y un mecanismo de recuperación de contraseñas mediante tokens temporales y envío de correo electrónico. 
+
+Para facilitar el desarrollo y despliegue, la aplicación se encuentra totalmente **containerizada con Docker**, aislando en servicios independientes el servidor web Apache, la base de datos relacional (MariaDB) y el receptor de correos de prueba en entorno local (Mailpit).
+
 ## 🛠️ Requisitos Previos
 
 Según el sistema operativo que utilices, necesitas tener instalado lo siguiente:
